@@ -39,15 +39,19 @@ abstract class InstallationHelperDatabase
 		{
 			// Build the connection options array.
 			$options = array(
-				'driver' => $driver,
-				'host' => $host,
-				'user' => $user,
-				'password' => $password,
-				'database' => $database,
-				'prefix' => $prefix,
-				'select' => $select
+				'driver'    => $driver,
+				'host'      => $host,
+				'user'      => $user,
+				'password'  => $password,
+				'database'  => $database,
+				'prefix'    => $prefix,
+				'select'    => $select
 			);
 
+                        if (getenv("OPENSHIFT_MYSQL_DB_HOST") && strtolower($host) == 'localhost') {
+                            $options['host'] = getenv("OPENSHIFT_MYSQL_DB_HOST") . ":" . getenv("OPENSHIFT_MYSQL_DB_PORT");
+                        }
+                        
 			// Get a database object.
 			$db = JDatabaseDriver::getInstance($options);
 		}
