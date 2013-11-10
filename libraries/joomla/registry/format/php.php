@@ -48,6 +48,18 @@ class JRegistryFormatPHP extends JRegistryFormat
 
 		$str = "<?php\nclass " . $params['class'] . " {\n";
 		$str .= $vars;
+                
+                //Support OpenShift
+                $str .= <<<'CONSTRUCT'
+   
+        public function __construct() {
+            if (getenv("OPENSHIFT_MYSQL_DB_HOST") && strtolower($this->host) == 'localhost') {
+                $this->host = getenv("OPENSHIFT_MYSQL_DB_HOST") . ":" . getenv("OPENSHIFT_MYSQL_DB_PORT");
+            }
+        }
+
+CONSTRUCT;
+                
 		$str .= "}";
 
 		// Use the closing tag if it not set to false in parameters.
